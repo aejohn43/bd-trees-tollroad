@@ -4,6 +4,9 @@
 // import java.util.Map;
 // import java.util.TreeMap;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * Application to demonstrate a TreeMap storing key:value pairs in sorted
  * order based on natural ordering of keys and also a different ordering
@@ -12,6 +15,8 @@
 public class TollRoad {
     // TODO 1: Declare two Map variables to associate String keys with Vehicle objects.
     // TODO 1: One will sort by vehicle description and one will sort by vehicle state.
+    private final Map<String, Vehicle> descToVehicle;
+    private final Map<String, Vehicle> stateToVehicle;
 
 
 
@@ -23,8 +28,14 @@ public class TollRoad {
     public TollRoad() {
         // TODO 2: Create the two TreeMap objects, the second of which must be
         // TODO 2: given an appropriate Comparator object when constructed.
-
-
+        descToVehicle = new TreeMap<>();
+        Comparator<String> comparator = new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.substring(1).compareTo(o2.substring(1));
+            }
+        };
+        stateToVehicle = new TreeMap<>(comparator);
     }
 
     /**
@@ -37,7 +48,14 @@ public class TollRoad {
      */
     public void addToll(String description) {
         // TODO 3: Complete this method as described in the exercise.
-
+        if (descToVehicle.containsKey(description)) {
+            descToVehicle.get(description).addToll();
+        }
+        else {
+            Vehicle vehicle = new Vehicle(description);
+            stateToVehicle.put(description, vehicle);
+            descToVehicle.put(description, vehicle);
+        }
     }
 
     /**
@@ -48,7 +66,12 @@ public class TollRoad {
      */
     public String getVehicleReportByDescription() {
         // TODO 4: Complete this method as described in the exercise.
-        return null;
+        StringBuilder vehicles = new StringBuilder();
+        List<Vehicle> list = new ArrayList<>(descToVehicle.values());
+        for (Vehicle vehicle : descToVehicle.values()){
+            vehicles.append(vehicle).append("\n");
+        }
+        return vehicles.toString();
     }
 
     /**
@@ -59,7 +82,12 @@ public class TollRoad {
      */
     public String getVehicleReportByState() {
         // TODO 5: Complete this method as described in the exercise.
-        return null;
+        StringBuilder vehicles = new StringBuilder();
+        List<Vehicle> list = new ArrayList<>(stateToVehicle.values());
+        for (Vehicle vehicle : stateToVehicle.values()){
+            vehicles.append(vehicle).append("\n");
+        }
+        return vehicles.toString();
     }
 
     /**
